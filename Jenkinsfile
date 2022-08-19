@@ -11,11 +11,14 @@ stage("Test") {
  sh "./mvnw verify"
  }
  }
-
 stage("Build & Push Image") {
  steps {
-sh ''' ./mvnw quarkus:add-extension  -Dextensions="container-image-jib" ''' 
-sh ''' ./mvnw package -DskipTests \
+ sh '''
+ ./mvnw quarkus:add-extension \
+ -Dextensions="container-image-jib"
+ '''
+ sh '''
+ ./mvnw package -DskipTests \
  -Dquarkus.jib.base-jvm-image=quay.io/redhattraining/do400-java-alpine-openjdk11-jre:latest \
  -Dquarkus.container-image.build=true \
  -Dquarkus.container-image.registry=quay.io \
@@ -27,9 +30,14 @@ sh ''' ./mvnw package -DskipTests \
  -Dquarkus.container-image.additional-tags=latest \
  -Dquarkus.container-image.push=true
  '''
+stage('Deploy to TEST') {
+ when { not { branch "main" } }
+ steps {
+ sh """ oc set image deployment home-automation  home-automation=quay.io/veronica/do400-deploying-lab:build-{BUILD_NUMBER}  -n hnhazr-deploying-lab-test --record"""
+ }
+}
  }
  }
  }
-
- }
+}
 
