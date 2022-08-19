@@ -30,8 +30,17 @@ stage("Build & Push Image") {
  -Dquarkus.container-image.additional-tags=latest \
  -Dquarkus.container-image.push=true
  '''
+stage('Deploy to TEST') {
+ when { not { branch "main" } }
+ steps {
+ sh """ oc set image deployment home-automation  home-automation=quay.io/veronica/do400-deploying-lab:build-{BUILD_NUMBER}  -n hnhazr-deploying-lab-test --record"""
+ }
+}
  }
  }
+<<<<<<< HEAD
+=======
  }
+>>>>>>> d8987ff... Added test deployment
 }
 
