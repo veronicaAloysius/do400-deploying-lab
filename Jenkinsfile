@@ -3,7 +3,7 @@ pipeline {
  agent {
  node { label "maven" }
  }
-environment { QUAY = credentials('veronica') }
+environment { QUAY = credentials('QUAY_USER') }
 
  stages {
 stage("Test") {
