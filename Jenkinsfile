@@ -29,7 +29,6 @@ java-alpine-openjdk11-jre:latest \
 
  stage("Test") {
  steps {
-vnw quarkus:add-extension -Dextensions="container-image-jib"'
  sh "./mvnw verify"
  }
  }
